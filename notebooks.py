@@ -1,0 +1,1 @@
+pip install librosa scipy noisereduce soundfile numpy matplotlib jupyter

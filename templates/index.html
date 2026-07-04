@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DeNoise — Speech Clarity Tool</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+
+  <nav class="navbar">
+  <div class="logo">De<span>Noise</span></div>
+  <div class="nav-right" style="display:flex;align-items:center;gap:8px">
+    <div class="badge">Speech Clarity Tool · FYP Demo</div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      🌙 Dark
+    </button>
+  </div>
+</nav>
+
+  <main class="app">
+
+    <!-- Particle canvas -->
+<div class="hero-wrapper">
+  <canvas id="particles" class="particle-canvas"></canvas>
+  <div class="hero">
+    <h1>Remove background <span>noise</span><br>from any speech recording</h1>
+    <p>Upload an audio file, apply multi-pass spectral subtraction, compare before &amp; after.</p>
+  </div>
+</div>
+    <div class="grid">
+
+      <!-- Upload -->
+      <div class="card">
+        <div class="card-title">Input file</div>
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-icon">🎙</div>
+          <div class="upload-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+          <div class="upload-text muted">Accepts .wav &nbsp;·&nbsp; .flac &nbsp;·&nbsp; .mp3</div>
+          <input type="file" id="fileInput" accept=".wav,.flac,.mp3" hidden/>
+        </div>
+        <div class="file-info" id="fileInfo" style="display:none">
+          <div class="file-row">
+            <span class="file-check">✔</span>
+            <div>
+              <div class="file-name" id="fileName"></div>
+              <div class="file-meta" id="fileMeta"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Algorithm -->
+      <div class="card">
+        <div class="card-title">Algorithm</div>
+        <div class="algo-row">
+          <div class="algo-badge">3×</div>
+          <div class="algo-info">
+            <div class="algo-name">Multi-Pass Spectral Subtraction</div>
+            <div class="algo-desc">3 aggressive passes — maximum noise removal</div>
+            <div class="pills">
+              <span class="pill">Pass 1: Non-stationary</span>
+              <span class="pill">Pass 2: Stationary</span>
+              <span class="pill">Pass 3: Residual</span>
+            </div>
+          </div>
+        </div>
+        <button class="run-btn" id="runBtn" disabled>⚡ Apply Noise Reduction</button>
+        <div class="pulse-bar" id="pulseBar"><div class="pulse-fill" id="pulseFill"></div></div>
+        <div class="status" id="status">Upload a file to get started.</div>
+      </div>
+
+      <!-- Waveform -->
+      <div class="card full">
+        <div class="card-title">Waveform preview</div>
+        <div class="wave-grid">
+          <div>
+            <div class="wave-label before-label">BEFORE — Noisy</div>
+            <canvas id="waveBefore" class="waveform"></canvas>
+          </div>
+          <div>
+            <div class="wave-label after-label">AFTER — Cleaned</div>
+            <canvas id="waveAfter" class="waveform"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Playback -->
+      <div class="card">
+        <div class="card-title">Before / After playback</div>
+        <div class="ba-grid">
+          <div class="ba-card">
+            <div class="ba-label before-label">Before</div>
+            <div class="ba-sub">Original noisy audio</div>
+            <button class="play-btn play-before" id="playBefore" disabled>▶ Play</button>
+          </div>
+          <div class="ba-card">
+            <div class="ba-label after-label">After</div>
+            <div class="ba-sub">Cleaned speech audio</div>
+            <button class="play-btn play-after" id="playAfter" disabled>▶ Play</button>
+          </div>
+        </div>
+        <button class="stop-btn" id="stopBtn">⏹ Stop Playback</button>
+      </div>
+
+      <!-- Results -->
+      <div class="card">
+        <div class="card-title">Results</div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-val before-val" id="snrBefore">—</div>
+            <div class="metric-label">SNR before</div>
+          </div>
+          <div class="arrow">→</div>
+          <div class="metric">
+            <div class="metric-val after-val" id="snrAfter">—</div>
+            <div class="metric-label">SNR after</div>
+          </div>
+        </div>
+        <div class="improve" id="improve"></div>
+        <button class="save-btn" id="downloadBtn" disabled>↓ Save cleaned file</button>
+      </div>
+
+    </div>
+  </main>
+
+  <audio id="audioPlayer"></audio>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
